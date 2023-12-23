@@ -1,6 +1,6 @@
-import math
-
 from sys import maxsize
+
+num_tiles: int = 9
 
 # Formatting functions
 def str2intlist(s: str, max_len: int = maxsize) -> list[int]:
