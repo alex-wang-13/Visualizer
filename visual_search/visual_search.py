@@ -43,8 +43,10 @@ if __name__ == '__main__':
 
       # Check if the last index has been reached; if so, reset the queue.
       if queue_index < len(state_queue):
-        p.set(state_queue[queue_index]) 
+        tilegroup.highlighted = True
+        p.set(state_queue[queue_index])
       else:
+        tilegroup.highlighted = False
         state_queue = []
      
     # Update and draw the tiles to the screen
