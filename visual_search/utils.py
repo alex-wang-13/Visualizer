@@ -32,3 +32,12 @@ def str2intlist(s: str, max_len: int = maxsize) -> list[int]:
       raise ValueError(f'should not see this error')
 
   return result
+
+class Node:
+  def __init__(self, state, parent=None) -> None:
+    self.state: list[int] = state
+    self.statestr: str = ''.join(str(chr) for chr in state)
+    self.parent = parent
+    self.g = 0 # The current path cost
+    self.h = 0 # The estimated future cost
+    self.f = 0 # the total cost f = g + h
