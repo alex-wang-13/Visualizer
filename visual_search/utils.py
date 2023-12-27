@@ -34,6 +34,22 @@ def str2intlist(s: str, max_len: int = maxsize) -> list[int]:
   return result
 
 class Node:
+  """
+  Represents a node in a search space for the A* algorithm.
+
+  Attributes:
+  - state (list[int]): The state represented as a list of integers.
+  - statestr (str): A string representation of the state.
+  - parent (Node): The parent node in the search tree. Default is None for the initial state.
+  - g (int): The current path cost from the start node to this node.
+  - h (int): The estimated future cost (heuristic) from this node to the goal node.
+  - f (int): The total cost, where f = g + h.
+
+  Methods:
+  - __lt__(self, other): Less-than comparison method. Compares nodes based on their total cost 'f'.
+  - __gt__(self, other): Greater-than comparison method. Compares nodes based on their total cost 'f'.
+  """
+  
   def __init__(self, state, parent=None) -> None:
     self.state: list[int] = state
     self.statestr: str = ''.join(str(chr) for chr in state)
@@ -41,3 +57,17 @@ class Node:
     self.g = 0 # The current path cost
     self.h = 0 # The estimated future cost
     self.f = 0 # the total cost f = g + h
+
+  def __lt__(self, other):
+    """
+    Less-than comparison method. Used to compare nodes based on their total cost 'f'.
+    """
+    
+    return self.f < other.f
+
+  def __gt__(self, other):
+    """
+    Greater-than comparison method. Used to compare nodes based on their total cost 'f'.
+    """
+    
+    return self.f > other.f
