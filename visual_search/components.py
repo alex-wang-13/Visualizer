@@ -22,7 +22,7 @@ class Tile:
   - No public methods are provided.
   """
   
-  def __init__(self, content: str, side_len=50) -> None:
+  def __init__(self, content: str, side_len=50, color='pink') -> None:
     """
     Initializes a Tile with the specified content and side length.
 
@@ -31,6 +31,7 @@ class Tile:
     Args:
     - content (str): The character content to be rendered on the tile.
     - side_len (int, optional): The side length of the tile. Default is 50.
+    - color (str): The pygame color of the background of the Tile. Default is pink.
     """
 
     if not isinstance(content, str):
@@ -47,7 +48,7 @@ class Tile:
     self.content_rect = self.content.get_rect()
     self.content_rect.center = self.surface_rect.center
     
-    pg.draw.rect(self.surface, 'pink', self.rect)
+    pg.draw.rect(self.surface, color, self.rect)
     self.surface.blit(self.content, self.content_rect)
 
 class TileGroup:
