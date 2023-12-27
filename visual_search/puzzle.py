@@ -1,6 +1,8 @@
+import heapq
 import utils
 
 from random import choice, seed
+from utils import Node
 
 class EightPuzzle:
   """
@@ -126,3 +128,91 @@ class EightPuzzle:
     """
 
     self.set(self.goal_state.copy())
+
+  def _get_neighbors(self, state: list[int]) -> list[list[int]]:
+    """
+    Get the neighboring states of the given state by swapping the blank tile (0) with adjacent tiles.
+
+    Args:
+    - state (list[int]): The current state represented as a list of integers.
+
+    Returns:
+    - list[list[int]]: A list of neighboring states obtained by swapping the blank tile with adjacent tiles.
+    """
+
+    # Get the index of the blank tile
+    z_index: int = state.index(0)
+    adj_indices: list[int] = [i for i, val in enumerate(self._adj_masks[z_index]) if val]
+
+    # Generate list of neighbor states
+    neighbors: list[list[int]] = []
+    for index in adj_indices:
+      copy = state.copy()
+      copy[index], copy[z_index] = copy[z_index], copy[index]
+      neighbors.append(copy)
+    return neighbors
+  
+  def heuristic(self, state: list[int]):
+    """
+    Calculate the heuristic value (Manhattan distance) for the given state.
+
+    Args:
+    - state (list[int]): The current state represented as a list of integers.
+
+    Returns:
+    - int: The calculated heuristic value.
+    """
+
+    distance: int = 0
+    for index, value in enumerate(state):
+      # Manhattan distance heuristic
+      x_i, y_i = index % 3, index // 3
+      x_v, y_v = value % 3, value // 3
+      distance += abs(x_i - x_v) + abs(y_i - y_v)
+
+    return distance
+
+  def solve_astar(self) -> list[list[int]]:
+    """
+    Solve the puzzle using the A* algorithm and return the path from the initial state to the goal state.
+
+    Returns:
+    - list[list[int]] or None: A list of states representing the path from the initial state to the goal state,
+      or None if no path is found.
+    """
+
+    open_set: list[Node] = []
+    closed_set: set[str] = set()
+
+    start_node = Node(self.state)
+    goal_node = Node(self.goal_state)
+
+    heapq.heappush(open_set, (start_node.f, start_node))
+
+    while open_set:
+      current_node: Node = heapq.heappop(open_set)[1]
+
+      if current_node.state == goal_node.state:
+        path = []
+        while current_node:
+          path.append(current_node.state)
+          current_node = current_node.parent
+        
+        return path[::-1]
+      
+      closed_set.add(current_node.statestr)
+
+      for neighbor in self._get_neighbors(current_node.state):
+        if ''.join(str(i) for i in neighbor) in closed_set:
+          continue
+
+        g = current_node.g + 1
+        h = self.heuristic(neighbor)
+        f = g + h
+
+        new_node = Node(neighbor, current_node)
+
+        if (f, new_node) not in open_set:
+          heapq.heappush(open_set, (f, new_node))
+
+    return None # No path is found
