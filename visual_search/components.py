@@ -19,7 +19,7 @@ class Tile:
   - content_rect (pg.Rect): The rectangle representing the dimensions of the rendered content.
 
   Methods:
-  - No public methods are provided.
+  - __eq__(self, other): Equals comparison method. Used to compare tiles based on their content.
   """
   
   def __init__(self, content: str, side_len=50, color='pink') -> None:
@@ -51,6 +51,13 @@ class Tile:
     pg.draw.rect(self.surface, color, self.rect)
     self.surface.blit(self.content, self.content_rect)
 
+  def __eq__(self, other) -> bool:
+    """
+    Equals comparison method. Used to compare tiles based on their content.
+    """
+
+    return self.content == other.content
+
 class TileGroup:
   """
   Represents a group of tiles on the screen.
@@ -60,6 +67,7 @@ class TileGroup:
   - tile_len (int): The side length of each tile.
   - padding (int, optional): The padding between tiles. Default is 0.
   - scale (int, optional): The scale factor for the entire tile group. Default is 1.
+  - highlight (bool): Toggle for highlight mode, in which the blank tile is highlighted.
   
   Attributes:
   - tile_pos (List[Tuple[int, int]]): List of base tile positions before adjustments.
@@ -73,8 +81,8 @@ class TileGroup:
   - draw(screen: pg.Surface): Draws the tile group on the specified Pygame surface.
   - update_statestr(statestr: str): Updates the state string and recreates the tiles accordingly.
   """
-
-  def __init__(self, statestr, tile_len, padding: int = 0, scale: int = 1) -> None:
+  
+  def __init__(self, statestr: str, tile_len, padding: int = 0, scale: int = 1, highlight = False) -> None:
     """
     Initializes a TileGroup with the specified parameters.
 
@@ -86,7 +94,10 @@ class TileGroup:
     - tile_len (int): The side length of each tile.
     - padding (int, optional): The padding between tiles. Default is 0.
     - scale (int, optional): The scale factor for the entire tile group. Default is 1.
+    - highlight (bool): Toggle for highlight mode, in which the blank tile is highlighted.
     """
+
+    self.highlight = highlight
 
     # Base tile positions
     tile_pos: list[tuple[int, int]] = [
@@ -106,6 +117,9 @@ class TileGroup:
 
     # Creating tiles based on statestr
     self.tiles: list[Tile] = [Tile(tile_num, tile_len) for tile_num in statestr]
+    index = self.statestr.index('0')
+    zero_color = 'pink' if highlight else 'orange'
+    self.tiles[index] = Tile(' ', self.tile_len, color=zero_color)
 
   def draw(self, screen: pg.Surface) -> None:
     """
@@ -129,3 +143,6 @@ class TileGroup:
       self.statestr = statestr
       # Creating tiles based on new statestr
       self.tiles: list[Tile] = [Tile(tile_chr, self.tile_len) for tile_chr in statestr]
+      index = self.statestr.index('0')
+      zero_color = 'pink' if self.highlight else 'orange'
+      self.tiles[index] = Tile(' ', self.tile_len, color=zero_color)
