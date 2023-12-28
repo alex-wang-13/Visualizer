@@ -31,7 +31,10 @@ if __name__ == '__main__':
         # Check K_1 to K_8
         for value in range(K_1, K_1+8):
           if e.key == value:
-            p.move(value - K_0)
+            try:
+              p.move(value - K_0)
+            except ValueError as error:
+              print(error)
         if e.key == K_SPACE:
           state_queue = p.solve_astar()
           queue_start_time = pg.time.get_ticks()
