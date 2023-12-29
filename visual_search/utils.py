@@ -1,6 +1,7 @@
 from sys import maxsize
 
 num_tiles: int = 9
+controls_fp: str = 'visual_search/controls.txt'
 
 # Formatting functions
 def str2intlist(s: str, max_len: int = maxsize) -> list[int]:
