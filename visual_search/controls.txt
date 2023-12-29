@@ -1,6 +1,8 @@
 Key:
 
 [1-8] - move tile to blank
+[DOWN] - speed up
+[UP] - slow down
 s - shuffle
 a - solve with A*
 q - quit
