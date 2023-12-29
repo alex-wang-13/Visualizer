@@ -4,7 +4,7 @@ import pygame as pg
 
 from pygame.locals import *
 from puzzle import EightPuzzle
-from components import TileGroup, TextBox
+from components import TileGroup, TextBox, Speedometer
 from utils import controls_fp
 
 pg.init()
@@ -14,15 +14,18 @@ if __name__ == '__main__':
   screen: pg.Surface = pg.display.set_mode()
   width, height = screen.get_size()
   p: EightPuzzle = EightPuzzle(EightPuzzle.goal_state)
-  tilegroup = TileGroup(p.statestr, tile_len=250, padding=10, scale=1)
+  tilegroup: TileGroup = TileGroup(p.statestr, tile_len=250, padding=10, scale=1)
   
+  textbox: TextBox = TextBox(path=controls_fp, line_len=width//2, font_size=64)
+  textbox.rect.topleft = width//2, 0
+
   clock = pg.time.Clock()
   queue_start_time: int = 0
   queue_delay_time: int = 500
-  state_queue: list[list[int]] = []
+  speedometer: Speedometer = Speedometer(500, 64)
+  speedometer.rect.topleft = width//2, textbox.rect.height
 
-  textbox: TextBox = TextBox(path=controls_fp, line_len=width//2, font_size=64)
-  textbox.rect.topleft = width//2, 0
+  state_queue: list[list[int]] = []
 
   running = True
   while running:
@@ -44,6 +47,10 @@ if __name__ == '__main__':
           queue_start_time = pg.time.get_ticks()
         if e.key == K_s:
           p.shuffle(k=10000)
+        if e.key == K_DOWN and queue_delay_time > 100:
+          queue_delay_time -= 100
+        if e.key == K_UP:
+          queue_delay_time += 100
     
     # Handle the queue
     if state_queue:
@@ -58,10 +65,15 @@ if __name__ == '__main__':
         tilegroup.highlighted = False
         state_queue = []
      
+    # Clear the frame
+    screen.fill('black')
+    
     # Update and draw the tiles to the screen
     tilegroup.update_statestr(p.statestr)
     tilegroup.draw(screen)
     textbox.draw(screen)
+    speedometer.set_speed(queue_delay_time)
+    speedometer.draw(screen)
     pg.display.flip()
 
     clock.tick(60)
