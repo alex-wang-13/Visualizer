@@ -1,0 +1,5 @@
+Key:
+  
+q - quit
+[1-8] - move tile to blank
+a - solve with A*
