@@ -148,6 +148,28 @@ class TileGroup:
       self.tiles[index] = Tile(' ', self.tile_len, color=zero_color)
 
 class TextBox:
+  """
+  Represents a text box in Pygame, displaying text read from a file.
+
+  Attributes:
+  - path (str): The path to the text file.
+  - line_len (int): The maximum number of characters per line in the text box.
+  - font_size (int): The size of the font used for rendering the text.
+  - text_color (str): The color of the text (default is 'black').
+  - back_color (str): The background color of the text box (default is 'white').
+  - font (pg.font.Font): The Pygame font object with the specified font size.
+  - line_surfaces (list[pg.Surface]): List of Pygame surfaces, each containing a rendered line of text.
+  - total_height (int): The total height needed for all lines in the text box.
+  - text_surface (pg.Surface): Pygame surface containing the entire rendered text box.
+  - rect (pg.Rect): Pygame rectangle representing the dimensions of the text surface.
+
+  Methods:
+  - __init__(self, path: str, line_len: int, font_size: int, text_color: str = 'black', back_color: str = 'white') -> None:
+      Initializes a TextBox object by reading lines from a file and rendering them onto a Pygame surface. 
+  - draw(self, screen: pg.Surface) -> None:
+      Draws the text box onto the specified Pygame surface.
+  """
+    
   def __init__(self, path: str, line_len: int, font_size: int, text_color: str = 'black', back_color: str = 'white') -> None:
     self.font_size: int = font_size
     self.font: pg.font.Font = pg.font.Font(None, self.font_size)
@@ -171,4 +193,14 @@ class TextBox:
     self.rect: pg.Rect = self.text_surface.get_rect()
 
   def draw(self, screen: pg.Surface) -> None:
+    """
+    Draws the text box onto the specified Pygame surface.
+    
+    Parameters:
+    - screen (pg.Surface): The Pygame surface on which to draw the text box.
+  
+    Returns:
+    - None
+    """
+    
     screen.blit(self.text_surface, self.rect)
