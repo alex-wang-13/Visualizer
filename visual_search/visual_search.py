@@ -4,7 +4,8 @@ import pygame as pg
 
 from pygame.locals import *
 from puzzle import EightPuzzle
-from components import TileGroup
+from components import TileGroup, TextBox
+from utils import controls_fp
 
 pg.init()
 
@@ -19,6 +20,9 @@ if __name__ == '__main__':
   queue_start_time: int = 0
   queue_delay_time: int = 500
   state_queue: list[list[int]] = []
+
+  textbox: TextBox = TextBox(path=controls_fp, line_len=width//2, font_size=64)
+  textbox.rect.topleft = width//2, 0
 
   running = True
   while running:
@@ -35,7 +39,7 @@ if __name__ == '__main__':
               p.move(value - K_0)
             except ValueError as error:
               print(error)
-        if e.key == K_SPACE:
+        if e.key == K_a:
           state_queue = p.solve_astar()
           queue_start_time = pg.time.get_ticks()
     
@@ -55,6 +59,7 @@ if __name__ == '__main__':
     # Update and draw the tiles to the screen
     tilegroup.update_statestr(p.statestr)
     tilegroup.draw(screen)
+    textbox.draw(screen)
     pg.display.flip()
 
     clock.tick(60)
