@@ -42,6 +42,8 @@ if __name__ == '__main__':
         if e.key == K_a:
           state_queue = p.solve_astar()
           queue_start_time = pg.time.get_ticks()
+        if e.key == K_s:
+          p.shuffle(k=10000)
     
     # Handle the queue
     if state_queue:
