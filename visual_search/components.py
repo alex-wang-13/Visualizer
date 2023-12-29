@@ -204,3 +204,32 @@ class TextBox:
     """
     
     screen.blit(self.text_surface, self.rect)
+
+class Speedometer:
+  def __init__(self, speed: int, font_size: int, text_color: str = 'red', back_color: str = 'white') -> None:
+    self.font_size: int = font_size
+    self.font = pg.font.Font(None, font_size)
+    self.text_color = text_color
+    self.back_color = back_color
+    self._update(speed, text_color, back_color)
+    self.rect: pg.Rect = self.content.get_rect()
+    
+  def _update(self, speed: int, text_color: str = 'red', back_color: str = 'white') -> None:
+    self.speed: int = speed
+    self.content: pg.Surface = self.font.render('Speed: ' + str(round(1000/self.speed, 2)) + 'steps/sec.', True, text_color, back_color)
+
+  def set_speed(self, speed: int) -> None:
+    self._update(speed, self.text_color, self.back_color)
+
+  def draw(self, screen: pg.Surface) -> None:
+    """
+    Draws the text box onto the specified Pygame surface.
+    
+    Parameters:
+    - screen (pg.Surface): The Pygame surface on which to draw the text box.
+  
+    Returns:
+    - None
+    """
+    
+    screen.blit(self.content, self.rect)
