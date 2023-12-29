@@ -1,5 +1,6 @@
 Key:
-  
-q - quit
+
 [1-8] - move tile to blank
+s - shuffle
 a - solve with A*
+q - quit
