@@ -146,3 +146,29 @@ class TileGroup:
       index = self.statestr.index('0')
       zero_color = 'pink' if self.highlight else 'orange'
       self.tiles[index] = Tile(' ', self.tile_len, color=zero_color)
+
+class TextBox:
+  def __init__(self, path: str, line_len: int, font_size: int, text_color: str = 'black', back_color: str = 'white') -> None:
+    self.font_size: int = font_size
+    self.font: pg.font.Font = pg.font.Font(None, self.font_size)
+
+    # Read lines form file
+    self.line_len: int = line_len
+    with open(file=path) as file:
+      lines = file.readlines()
+
+    # Render text box line by line
+    self.line_surfaces: list[pg.Surface] = [self.font.render(line.strip(), True, text_color) for line in lines]
+    self.total_height: int = sum(surface.get_height() for surface in self.line_surfaces)
+    self.text_surface: pg.Surface = pg.Surface((line_len, self.total_height))
+    self.text_surface.fill(back_color)
+
+    y_offset = 0
+    for line_surface in self.line_surfaces:
+      self.text_surface.blit(line_surface, (0, y_offset))
+      y_offset += line_surface.get_height()
+
+    self.rect: pg.Rect = self.text_surface.get_rect()
+
+  def draw(self, screen: pg.Surface) -> None:
+    screen.blit(self.text_surface, self.rect)
